@@ -1,66 +1,41 @@
+#include <sys/wait.h>
+#include <unistd.h>
+
 #include <string>
 #include <vector>
-#include <unistd.h>
-#include <sys/wait.h>
+
+#include "cmd.hpp"
 
 
-void execute(char ** args);
 std::vector<std::string> parse(std::string s);
-char ** make_args(std::vector<std::string> sep);
 void run(std::string input);
-int main(){
+int main() {
     run("cat shell.cpp");
     run("ls -l");
-
 
     return 0;
 }
 
-void run(std::string input){
+void run(std::string input) {
 
-    pid_t pid = fork();
-
-    if(pid == 0){
-        std::vector<std::string> separated = parse(input);
-        char ** args = make_args(separated);
-        execute(args);
-    }else{
-        wait(NULL);
-    }
-    
+    std::vector<std::string> separated = parse(input);
+    cmd my_cmd(separated);
+    my_cmd.run();
 }
 
-
-char ** make_args(std::vector<std::string> sep){
-    char ** args = new char* [sep.size() + 1];
-
-    for(int i = 0;i < sep.size();i++){
-        args[i] = new char [sep[i].length() + 1];
-        strcpy(args[i], sep[i].c_str());
-        args[i][sep[i].length()] = '\0';
-    }
-    args[sep.size()] = NULL;
-    return args;
-}
-
-
-std::vector<std::string> parse(std::string s){
+std::vector<std::string> parse(std::string s) {
     s += " ";
     std::vector<std::string> res;
     std::string curr = "";
-    for(int i = 0; i < s.length(); i++){
-        if(s[i] == ' '){
-            if(curr.length() >0){
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == ' ') {
+            if (curr.length() > 0) {
                 res.push_back(curr);
             }
             curr = "";
-        }else{
+        } else {
             curr += s[i];
         }
     }
     return res;
-}
-
-void execute(char ** args){
-    execvp(args[0], args);
 }

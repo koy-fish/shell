@@ -1,3 +1,3 @@
 
-shell: shell.cpp
-	clang++ shell.cpp -o shell
+shell: shell.cpp cmd.cpp
+	clang++ shell.cpp cmd.cpp -o shell
