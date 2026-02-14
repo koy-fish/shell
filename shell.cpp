@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include <sys/wait.h>
 
 
 void execute(char ** args);
@@ -8,14 +9,25 @@ std::vector<std::string> parse(std::string s);
 char ** make_args(std::vector<std::string> sep);
 void run(std::string input);
 int main(){
+    run("cat shell.cpp");
     run("ls -l");
+
+
     return 0;
 }
 
 void run(std::string input){
-    std::vector<std::string> separated = parse(input);
-    char ** args = make_args(separated);
-    execute(args);
+
+    pid_t pid = fork();
+
+    if(pid == 0){
+        std::vector<std::string> separated = parse(input);
+        char ** args = make_args(separated);
+        execute(args);
+    }else{
+        wait(NULL);
+    }
+    
 }
 
 
