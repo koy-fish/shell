@@ -7,23 +7,23 @@
 #include "cmd.hpp"
 
 
-std::vector<std::string> parse(std::string s);
+std::vector<std::string> tokenize(std::string s);
 void run(std::string input);
 int main() {
-    run("cat shell.cpp");
-    run("ls -l");
-
+    run("cat < shell.cpp > other_shell.cpp");
     return 0;
 }
 
-void run(std::string input) {
 
-    std::vector<std::string> separated = parse(input);
-    cmd my_cmd(separated);
+void run(std::string input) {
+    std::vector<std::string> tokens = tokenize(input);
+    
+    cmd my_cmd(tokens);
     my_cmd.run();
 }
 
-std::vector<std::string> parse(std::string s) {
+
+std::vector<std::string> tokenize(std::string s) {
     s += " ";
     std::vector<std::string> res;
     std::string curr = "";
@@ -33,7 +33,7 @@ std::vector<std::string> parse(std::string s) {
                 res.push_back(curr);
             }
             curr = "";
-        } else {
+        }else {
             curr += s[i];
         }
     }
