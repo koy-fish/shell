@@ -31,14 +31,7 @@ void cmd::redirect() {
     }
 }
 void cmd::run() {
-    pid_t pid = fork();
-
-    if (pid == 0) {
-        redirect();
-        execvp(args[0], args.data());
-    } else {
-        wait(NULL);
-    }
+    execvp(args[0], args.data());
 }
 
 void cmd::print_args() {

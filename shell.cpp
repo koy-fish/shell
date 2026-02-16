@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "cmd.hpp"
+#include "cmd_list.hpp"
 
 std::string prompt = "ksh $ ";
 
-std::vector<std::string> tokenize(std::string s);
+std::vector<std::vector<std::string> > parse(std::string s);
 void run(std::string input);
 std::string get_input();
 int main() {
@@ -28,23 +28,27 @@ std::string get_input(){
 }
 
 void run(std::string input) {
-    std::vector<std::string> tokens = tokenize(input);
+    std::vector<std::vector<std::string> > parsed = parse(input);
     
-    cmd my_cmd(tokens);
-    my_cmd.run();
+    cmd_list my_cmd_list(parsed);
+    my_cmd_list.run();
 }
 
-
-std::vector<std::string> tokenize(std::string s) {
+std::vector<std::vector<std::string> > parse(std::string s){
     s += " ";
-    std::vector<std::string> res;
+    std::vector<std::vector<std::string> > res;
     std::string curr = "";
+    res.push_back(std::vector<std::string>());
+    int curr_cmd = 0;
     for (int i = 0; i < s.length(); i++) {
         if (s[i] == ' ') {
             if (curr.length() > 0) {
-                res.push_back(curr);
+                res[curr_cmd].push_back(curr);
             }
             curr = "";
+        }else if(s[i] == '|'){
+            res.push_back(std::vector<std::string>());
+            curr_cmd += 1;
         }else {
             curr += s[i];
         }
