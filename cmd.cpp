@@ -21,17 +21,22 @@ cmd::cmd(std::vector<std::string>& tokens) {
 void cmd::redirect() {
     if (this->in.length() > 0) {
         int i = open(this->in.c_str(), O_RDONLY);
-        dup2(i, STDIN_FILENO);
+        if(dup2(i, STDIN_FILENO) == -1){
+            std::cerr << "[ERROR] dup";
+        }
         close(i);
     }
     if (this->out.length() > 0) {
         int o = open(this->out.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        dup2(o, STDOUT_FILENO);
+        if(dup2(o, STDOUT_FILENO) == -1){
+            std::cerr << "[ERROR] dup";
+        }
         close(o);
     }
 }
 void cmd::run() {
     execvp(args[0], args.data());
+    std::cerr << "[ERROR] exec";
 }
 
 void cmd::print_args() {

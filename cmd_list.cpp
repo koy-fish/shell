@@ -15,6 +15,9 @@ void cmd_list::run() {
 
     for (int i = 0; i < cmds.size(); i++) {
         pid_t pid = fork();
+        if(pid < 0){
+            std::cerr << "[ERROR] fork";
+        }
         //child
         if (pid == 0) {
             //redirect pipes
@@ -25,10 +28,14 @@ void cmd_list::run() {
             cmd4
             */
             if (i < cmds.size() - 1) {
-                dup2(pipes[i][1], STDOUT_FILENO);
+                if(dup2(pipes[i][1], STDOUT_FILENO)){
+                    std::cerr << "[ERROR] dup";
+                }
             }
             if (i > 0) {
-                dup2(pipes[i - 1][0], STDIN_FILENO);
+                if(dup2(pipes[i - 1][0], STDIN_FILENO)){
+                    std::cerr << "[ERROR] dup";
+                }
             }
 
             //close all the pipes
