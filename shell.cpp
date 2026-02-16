@@ -9,11 +9,21 @@
 
 std::vector<std::string> tokenize(std::string s);
 void run(std::string input);
+std::string get_input();
 int main() {
-    run("cat < shell.cpp > other_shell.cpp");
+    while(true){
+        std::string input = get_input();
+        run(input);
+    }
     return 0;
 }
 
+
+std::string get_input(){
+    std::string res;
+    std::getline(std::cin, res);
+    return res;
+}
 
 void run(std::string input) {
     std::vector<std::string> tokens = tokenize(input);
