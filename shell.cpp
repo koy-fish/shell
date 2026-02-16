@@ -6,6 +6,7 @@
 
 #include "cmd.hpp"
 
+std::string prompt = "ksh $ ";
 
 std::vector<std::string> tokenize(std::string s);
 void run(std::string input);
@@ -20,6 +21,7 @@ int main() {
 
 
 std::string get_input(){
+    std::cout << prompt;
     std::string res;
     std::getline(std::cin, res);
     return res;
