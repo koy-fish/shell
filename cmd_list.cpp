@@ -29,12 +29,12 @@ void cmd_list::run() {
             */
             if (i < cmds.size() - 1) {
                 if(dup2(pipes[i][1], STDOUT_FILENO)){
-                    std::cerr << "[ERROR] dup";
+                    std::cerr << "[ERROR] dup\n";
                 }
             }
             if (i > 0) {
                 if(dup2(pipes[i - 1][0], STDIN_FILENO)){
-                    std::cerr << "[ERROR] dup";
+                    std::cerr << "[ERROR] dup\n";
                 }
             }
 

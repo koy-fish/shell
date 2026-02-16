@@ -22,21 +22,21 @@ void cmd::redirect() {
     if (this->in.length() > 0) {
         int i = open(this->in.c_str(), O_RDONLY);
         if(dup2(i, STDIN_FILENO) == -1){
-            std::cerr << "[ERROR] dup";
+            std::cerr << "[ERROR] dup\n";
         }
         close(i);
     }
     if (this->out.length() > 0) {
         int o = open(this->out.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if(dup2(o, STDOUT_FILENO) == -1){
-            std::cerr << "[ERROR] dup";
+            std::cerr << "[ERROR] dup\n";
         }
         close(o);
     }
 }
 void cmd::run() {
     execvp(args[0], args.data());
-    std::cerr << "[ERROR] exec";
+    std::cerr << "[ERROR] exec\n";
 }
 
 void cmd::print_args() {

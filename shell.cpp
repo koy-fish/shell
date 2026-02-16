@@ -6,11 +6,12 @@
 
 #include "cmd_list.hpp"
 
-std::string prompt = "ksh $ ";
+std::string prompt = "ksh % ";
 
 std::vector<std::vector<std::string> > parse(std::string s);
 void run(std::string input);
 std::string get_input();
+int shell_command(std::vector<std::vector<std::string> > parsed);
 int main() {
     while(true){
         std::string input = get_input();
@@ -20,6 +21,7 @@ int main() {
 }
 
 
+
 std::string get_input(){
     std::cout << prompt;
     std::string res;
@@ -27,11 +29,28 @@ std::string get_input(){
     return res;
 }
 
+
+
 void run(std::string input) {
     std::vector<std::vector<std::string> > parsed = parse(input);
-    
-    cmd_list my_cmd_list(parsed);
-    my_cmd_list.run();
+    if(shell_command(parsed) == 0){
+        cmd_list my_cmd_list(parsed);
+        my_cmd_list.run();
+    }
+}
+
+int shell_command(std::vector<std::vector<std::string> > parsed){
+    if(parsed[0][0].compare("exit") == 0){
+        std::exit(EXIT_SUCCESS);
+        return 1;
+    }else if(parsed[0][0].compare("cd") == 0){
+        std::cout << parsed[0][1] << std::endl;
+        if (chdir(parsed[0][1].c_str()) != 0){
+            std::cerr << "[ERROR] cd";
+        }
+        return 1;
+    }
+    return 0;
 }
 
 std::vector<std::vector<std::string> > parse(std::string s){
